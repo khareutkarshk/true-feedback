@@ -6,7 +6,6 @@ import { create } from "domain";
 export async function POST(request: Request){
     await dbConnect()
 
-    const {message, to} = await request.json()
 
     const {username, content} = await request.json()
 
@@ -20,7 +19,7 @@ export async function POST(request: Request){
             }, {status: 404})
         }
 
-        if(!user.isAcceptingMessage){
+        if(!user.isAcceptingMessages){
             return Response.json({
                 success: false,
                 message: "User is not accepting messages"

@@ -1,4 +1,6 @@
+"use client"
 import { MessageCard } from '@/components/MessageCard'
+import Navbar from '@/components/Navbar'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/hooks/use-toast'
@@ -25,7 +27,10 @@ function Dashboard() {
     setMessages((prevMessages) => prevMessages.filter((message) => message._id !== messageId))
 
   }
-  const { data: session } = useSession()
+  const { data: session, status} = useSession()
+  
+
+
 
   const form = useForm({
     resolver: zodResolver(AcceptMessageSchema)
@@ -77,7 +82,7 @@ function Dashboard() {
   }, [setIsLoading, setMessages])
 
   useEffect(() => {
-    if (!session || !session.user) return
+    // if (!session || !session.user) return
     fetchMessages()
     fetchAcceptMessage()
   }, [session, setValue, fetchAcceptMessage, fetchMessages])
@@ -106,6 +111,10 @@ function Dashboard() {
     }
   }
 
+  if (!session || !session.user) {
+    return <></>
+  }
+
   const { username } = session?.user as User
   const baseUrl = `${window.location.protocol}//${window.location.host}`
   const profileUrl = `${baseUrl}/u/${username}`
@@ -116,17 +125,13 @@ function Dashboard() {
       title: 'Copied',
       description: 'Profile URL copied to clipboard',
     })
-
-    if (!session || !session.user) {
-      return (
-        <div>
-          You need to login to view this page
-        </div>
-      )
-    }
+  }
 
 
-    return (
+  return (
+    <>
+
+      <Navbar />
       <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
         <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
@@ -137,7 +142,7 @@ function Dashboard() {
               type="text"
               value={profileUrl}
               disabled
-              className="input input-bordered w-full p-2 mr-2"
+              className="input bg-slate-100 rounded-md input-bordered w-full p-2 mr-2"
             />
             <Button onClick={copyToClipboard}>Copy</Button>
           </div>
@@ -170,6 +175,7 @@ function Dashboard() {
             <RefreshCcw className="h-4 w-4" />
           )}
         </Button>
+
         <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
           {messages.length > 0 ? (
             messages.map((message, index) => (
@@ -183,9 +189,12 @@ function Dashboard() {
             <p>No messages to display.</p>
           )}
         </div>
+
+
       </div>
-    );
-  }
+    </>
+  );
 }
+
 
 export default Dashboard

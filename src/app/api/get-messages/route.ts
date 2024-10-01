@@ -32,8 +32,9 @@ export async function GET(request: Request) {
                 messages: {$push: '$messages'}
             }}
         ])
+        
 
-        if(!user || user.length === 0){
+        if(!user){
             return Response.json({
                 success: false,
                 message: "User not found"
@@ -42,7 +43,7 @@ export async function GET(request: Request) {
 
         return Response.json({
             success: true,
-            messages: user[0].messages
+            messages: user[0]?.messages
         }, {status: 200})
         
     } catch (error) {

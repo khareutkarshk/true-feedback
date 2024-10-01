@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
         return Response.json({ 
             success: true, 
-            questions
+            message: questions
          }, { status: 200 });
 
 
